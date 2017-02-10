@@ -12,13 +12,7 @@ public class RealSpider {
 	private String Dir;
 	
 	public RealSpider(String Dir) {
-		this(Dir,1,3800);
-	}
-	
-	public RealSpider(String Dir,int StartPage,int EndPage) {
 		this.Dir = Dir;
-		this.StartPage = StartPage;
-		this.EndPage = EndPage;
 	}
 	
 	public String ReadPage(String url) {
