@@ -14,6 +14,7 @@ public class RealSpider {
 	public RealSpider(String Dir) {
 		this.Dir = Dir;
 	}
+
 	
 	public String ReadPage(String url) {
 		URL ThisPage;
@@ -49,7 +50,7 @@ public class RealSpider {
 		Resource re = new Resource();
 		while (m.find()) {
 			re.Category.add(m.group(1));
-			re.DirName.add(m.group(2).replaceAll("[\\\\?\"/<>*|:／]+", " ").trim());
+			re.DirName.add(m.group(2).replaceAll("[\\.+\t\\\\?\"/<>*|:／]+", " ").trim());
 			re.torrent.add(m.group(3));
 		}
 		return re;
@@ -86,25 +87,50 @@ public class RealSpider {
 		return NextPage + Integer.toString(Page);
 	}
 	
-	
-	public static void main(String[] args) {
-		RealSpider spider = new RealSpider("F:\\dmhy");
+	public void StartSpider(int Start, int End) {
 		String html;
-		for (int i = 1; i <= 1000; i++) { 
+		for (int i = Start; i <= End; i++) {
 			System.out.println("Page:" + i);
 			if (i == 1) {
-				html = spider.ReadPage(spider.getHomePage());
+				html = ReadPage(getHomePage());
 			} else {
-				html = spider.ReadPage(spider.getNextPage(i));
+				html = ReadPage(getNextPage(i));
 			}
-			Resource re = spider.getResourceByHtml(html);
-			spider.Download(re);
+			Resource re = getResourceByHtml(html);
+			Download(re);
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public void StartSpider() {
+		String html;
+		int i = 0;
+		while (true) {
+			i++;
+			System.out.println("Page:" + i);
+			if (i == 1) {
+				html = ReadPage(getHomePage());
+			} else {
+				html = ReadPage(getNextPage(i));
+			}
+			Resource re = getResourceByHtml(html);
+			if (re.torrent.size() == 0) break;
+			Download(re);
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static void main(String[] args) {
+		RealSpider spider = new RealSpider("F:\\dmhy");
+		spider.StartSpider();
 	}
 }
 
