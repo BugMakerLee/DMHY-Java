@@ -10,6 +10,7 @@ public class RealSpider {
 	private final String HomePage = "https://share.dmhy.org";
 	private final String NextPage = HomePage + "/topics/list/page/";
 	private String Dir;
+	private boolean IsEnd;
 	
 	public RealSpider(String Dir) {
 		this.Dir = Dir;
@@ -67,6 +68,7 @@ public class RealSpider {
 				if (!file.exists()) {
 					try {
 						file.createNewFile();
+						IsEnd = false;
 						FileWriter out = new FileWriter(file);
 						out.write(re.torrent.get(i));
 						out.close();
@@ -74,7 +76,9 @@ public class RealSpider {
 						e.printStackTrace();
 						System.out.println(file);
 					}
-				} 
+				} else {
+					IsEnd = true;
+				}
 			}
 		}
 	}
@@ -120,17 +124,52 @@ public class RealSpider {
 			Resource re = getResourceByHtml(html);
 			if (re.torrent.size() == 0) break;
 			Download(re);
+		}
+	}
+	
+	public void StartWithThread() {
+		Multithread mt = new Multithread();
+		new Thread(mt, "线程1").start();
+		new Thread(mt, "线程2").start();
+		new Thread(mt, "线程3").start();
+	}
+	
+	public void StartWithThread(int Start, int End) {
+		Multithread mt = new Multithread();
+		new Thread(mt, "线程1").start();
+		new Thread(mt, "线程2").start();
+		new Thread(mt, "线程3").start();
+	}
+	
+
+	public void Update() {
+		String html;
+		int i = 0;
+		while (true) {
+			i++;
+			System.out.println("Page:" + i);
+			if (i == 1) {
+				html = ReadPage(getHomePage());
+			} else {
+				html = ReadPage(getNextPage(i));
+			}
+			Resource re = getResourceByHtml(html);
+			Download(re);
+			if (IsEnd) break;
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
+		
 	}
 	
 	public static void main(String[] args) {
 		RealSpider spider = new RealSpider("F:\\dmhy");
-		spider.StartSpider();
+		spider.StartWithThread();
+//		spider.StartSpider();
+//		spider.Update();
 	}
 }
 
