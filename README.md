@@ -1,4 +1,4 @@
-# DMHY-Spider-Java
+# DMHY-Java
 动漫花园爬虫
 
 ![动漫花园网站](http://static.zybuluo.com/NEGAI/jrucvisgdgq8gg7dco1cnnhp/image_1b8jgs6v0cblpkumbvimdill9.png)
